@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- New document created with EditiX at Wed Apr 20 11:43:54 IST 2016 -->
+
+
+<bib>
+<book year="2010">
+<title>"FIVE POINTS SOMEONE"</title>
+<author>
+<last>BHAGAT</last>
+<first>CHETAN</first>
+</author>
+<publisher>CB PUBLISHER</publisher>
+<price>125</price>
+</book>
+
+
+
+<book year="1987">
+<title>"THE NOTEBOOK"</title>
+<author>
+<last>STEVEN</last>
+<first>WOLKS</first>
+</author>
+<publisher>ZIP</publisher>
+<price>320</price>
+</book>
+
+<book year="1999">
+<title>"Ak's peotry in the way she wanted"</title>
+<author>
+<last>G</last>
+<first>Ankit</first>
+</author>
+<publisher>Addison-wesley</publisher>
+<price>150</price>
+</book>
+
+<book year="2007">
+<title>"ONE NIGHT AT CALL CENTRE"</title>
+<publisher>CB2 PUBLISHER</publisher>
+<price>125</price>
+</book>
+
+<book year="1987">
+<title>"THE NOTEBOOK2"</title>
+<author>
+<last>STEVEN</last>
+<first>WOLKS</first>
+</author>
+<author>
+<last>BHAGAT</last>
+<first>CHETAN</first>
+</author>
+<publisher>ZIP</publisher>
+<price>320</price>
+</book>
+
+</bib>
+

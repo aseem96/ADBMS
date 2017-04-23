@@ -1,0 +1,19 @@
+<!ELEMENT Employee  ( Emp+ )>
+<!ELEMENT Emp  ( Ename , Children+ , Skills , Salary )>
+<!ELEMENT Ename  ( #PCDATA )>
+<!ELEMENT Children  ( Cname , Birthday )>
+<!ELEMENT Cname  ( #PCDATA )>
+<!ELEMENT Birthday  ( Day , Month , Year )>
+<!ELEMENT Day  ( #PCDATA )>
+<!ELEMENT Month  ( #PCDATA )>
+<!ELEMENT Skills  ( Type , Exam )>
+<!ELEMENT Type  ( #PCDATA )>
+<!ELEMENT Exam  ( Year , City )>
+<!ELEMENT City  ( #PCDATA )>
+<!ELEMENT Year  ( #PCDATA )>
+<!ELEMENT Salary  ( #PCDATA )>
+
+
+
+
+

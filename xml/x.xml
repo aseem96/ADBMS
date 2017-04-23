@@ -1,0 +1,9 @@
+let $y:="Mango,Banana,Apple,WaterMelon,Orange"
+for $x in tokenize($y,",")
+
+return
+
+<fruit>
+{$x}
+</fruit>
+ 

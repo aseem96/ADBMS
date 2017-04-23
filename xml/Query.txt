@@ -1,0 +1,286 @@
+Query No 1::
+
+for $x in doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+where $x/@year >1991 and $x/publisher="Addison-weseley"
+return <Query1>{$x/@year, $x/title}</Query1>
+
+output ::
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Query1 year="2001">
+   <title>Java head first search</title>
+</Query1>
+<Query1 year="2001">
+   <title>cpp</title>
+</Query1>
+
+---------------------------------------------------------------
+
+Query No 2::
+
+for $x in doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+return <Result>{$x/title,$x/author}</Result>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Result>
+   <title>Computer Networks</title>
+   <author>
+      <last>Piterson</last>
+      <first>Biley</first>
+   </author>
+</Result>
+<Result>
+   <title>Data Structure and Concepts</title>
+   <author>
+      <last>Herberlt</last>
+      <first>Shield</first>
+   </author>
+</Result>
+<Result>
+   <title>Java Tutorial</title>
+   <author>
+      <last>Herberlt</last>
+      <first>Shield</first>
+   </author>
+   <author>
+      <last>Nameley</last>
+      <first>Jack</first>
+   </author>
+</Result>
+<Result>
+   <title>Java Tutorial</title>
+   <author>
+      <last>karl</last>
+      <first>Shield</first>
+   </author>
+</Result>
+<Result>
+   <title>Java head first search</title>
+   <author>
+      <last>karl</last>
+      <first>Shield</first>
+   </author>
+</Result>
+<Result>
+   <title>cpp</title>
+   <author>
+      <last>karl</last>
+      <first>Shield</first>
+   </author>
+</Result>
+
+
+-----------------------------------------------------------
+
+Query no 3::
+let  $x := doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+for $y in distinct-values($x/author/last)
+return <Query2Result>
+{
+   <author>{$y}</author>
+}
+{
+   for $x1 in doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+   where $x1/author/last=$y
+   return $x1/title
+ }
+</Query2Result>
+output ::
+<?xml version="1.0" encoding="UTF-8"?>
+<Query2Result>
+   <author>Piterson</author>
+   <title>Computer Networks</title>
+</Query2Result>
+<Query2Result>
+   <author>Herberlt</author>
+   <title>Data Structure and Concepts</title>
+   <title>Java Tutorial</title>
+</Query2Result>
+<Query2Result>
+   <author>Nameley</author>
+   <title>Java Tutorial</title>
+</Query2Result>
+<Query2Result>
+   <author>karl</author>
+   <title>Java Tutorial</title>
+   <title>Java head first search</title>
+   <title>cpp</title>
+</Query2Result>  
+------------------------------------------------------------------
+
+
+Query No 4::
+let  $x := doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+for $y in distinct-values($x/title) 
+where count($x/author)>0
+return <Query2Result>
+{
+   <Title>{$y}</Title>
+}
+{ 
+   for $x1 in doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+   let $b1:= $x1/author[position()<2]
+   where $x1/title=$y and count($b1)<2
+   return $b1
+}
+{
+   for $x1 in doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+   let $b1:= $x1/author[position()<2]
+   where $x1/title=$y and count($b1)>2
+   return "et-al"
+}
+</Query2Result>
+-----------------------------------------------------------------------------------
+
+let  $x := doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+for $y in distinct-values($x/title) 
+where count($x/author)>0
+return <Query2Result>
+{
+   <Title>{$y}</Title>
+}
+{ 
+   for $x1 in doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+   let $b1:= $x1/author[position()<2]
+   where $x1/title=$y and count($b1)<2
+   return $b1
+}
+</Query2Result>
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Query2Result>
+   <Title>Computer Networks</Title>
+   <author>
+      <last>Piterson</last>
+      <first>Biley</first>
+   </author>
+</Query2Result>
+<Query2Result>
+   <Title>Data Structure and Concepts</Title>
+   <author>
+      <last>Herberlt</last>
+      <first>Shield</first>
+   </author>
+</Query2Result>
+<Query2Result>
+   <Title>Java Tutorial</Title>
+   <author>
+      <last>Herberlt</last>
+      <first>Shield</first>
+   </author>
+   <author>
+      <last>karl</last>
+      <first>Shield</first>
+   </author>
+</Query2Result>
+<Query2Result>
+   <Title>Java head first search</Title>
+   <author>
+      <last>karl</last>
+      <first>Shield</first>
+   </author>
+</Query2Result>
+<Query2Result>
+   <Title>cpp</Title>
+   <author>
+      <last>karl</last>
+      <first>Shield</first>
+   </author>
+</Query2Result>
+----------------------------------------------
+
+let  $x := doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+for $y in $x
+where count($y/author)>0
+return <res>{distinct-values($y/title)}
+{ 
+   for $x1 in doc("/home/pict/Desktop/B120058553/book.xml")/bib/book/author[position()<=2]
+   return  $x1/author[position()<=2]/last
+}
+{ 
+    if (count($y/author) > 2)
+    then  <a>"et-al"</a>
+    else()
+}
+
+</res>
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<res>Computer Networks</res>
+<res>Data Structure and Concepts</res>
+<res>Java Tutorial<a>"et-al"</a>
+</res>
+<res>Java Tutorial</res>
+<res>Java head first search</res>
+<res>cpp</res>
+
+
+
+---------------------final   
+
+for $x in doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+where count($x/author)>0
+return <res>{$x/title}
+{
+   for $a in $x/author[position()<=2]
+   return $a   
+}
+{
+   if(count($x/author)>2)
+   then <a>{"et-al"}</a>
+   else()
+}</res>
+
+output ::
+
+<?xml version="1.0" encoding="UTF-8"?>
+<res>
+   <title>Computer Networks</title>
+   <author>
+      <last>Piterson</last>
+      <first>Biley</first>
+   </author>
+</res>
+<res>
+   <title>Data Structure and Concepts</title>
+   <author>
+      <last>Herberlt</last>
+      <first>Shield</first>
+   </author>
+</res>
+<res>
+   <title>Java Tutorial</title>
+   <author>
+      <last>Herberlt</last>
+      <first>Shield</first>
+   </author>
+   <author>
+      <last>Nameley</last>
+      <first>Jack</first>
+   </author>
+   <a>et-al</a>
+</res>
+<res>
+   <title>Java Tutorial</title>
+   <author>
+      <last>karl</last>
+      <first>Shield</first>
+   </author>
+</res>
+<res>
+   <title>Java head first search</title>
+   <author>
+      <last>karl</last>
+      <first>Shield</first>
+   </author>
+</res>
+<res>
+   <title>cpp</title>
+   <author>
+      <last>karl</last>
+      <first>Shield</first>
+   </author>
+</res>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- New XML document created with EditiX XML Editor (http://www.editix.com) at Thu Apr 21 09:30:00 IST 2016 -->
+
+<Employee>
+
+<Emp>
+
+	<Ename>
+
+
+	</Ename>
+
+		<Children>
+
+		
+
+			<Cname>
+
+
+			</Cname>	
+
+			<Birthday>
+					<Day></Day>
+					<Month></Month>
+					<Year></Year>
+			</Birthday>
+
+		
+
+		</Children>
+
+		
+
+		<Skills>
+
+		
+
+			<Type></Type>
+
+		
+
+			<Exam>
+				<Year></Year>
+				<City></City>
+			</Exam>
+
+		</Skills>
+
+		
+
+
+
+
+</Emp>
+
+</Employee>
+
+
+

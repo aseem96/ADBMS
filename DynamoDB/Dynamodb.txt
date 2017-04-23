@@ -1,0 +1,261 @@
+CREATE TABLE
+
+
+CREATE TABLE
+var params = {
+
+TableName : "PizzaDelivery",
+
+KeySchema: [
+
+{ AttributeName: "ID", KeyType: "HASH" }, //Partition key
+
+{ AttributeName: "Name", KeyType: "RANGE" }, //Sort key
+
+],
+
+AttributeDefinitions: [
+
+{ AttributeName: "ID", AttributeType: "N" },
+
+{ AttributeName: "Name", AttributeType: "S" }
+],
+
+ProvisionedThroughput: {
+
+ReadCapacityUnits: 1,
+
+WriteCapacityUnits: 1
+
+}
+
+};
+
+dynamodb.createTable(params, function(err, data) {
+    if (err)
+        console.log(JSON.stringify(err, null, 2));
+    else
+        console.log(JSON.stringify(data, null, 2));
+});
+
+INPUT VALUES
+
+var params = {
+    TableName: "PizzaDelivery",
+    Item: {
+        "ID":10,
+        "Name":"Amit",
+        "info":{
+            "cost":2000,
+            "rating":7
+        },
+        "Order_date" : "16 jan 2017",
+        
+    }
+};
+docClient.put(params, function(err, data) {
+    if (err)
+        console.log(JSON.stringify(err, null, 2));
+    else
+        console.log(JSON.stringify(data, null, 2));
+});
+
+
+SCAN
+
+var params = { 
+TableName: "PizzaDelivery" 
+}; 
+dynamodb.scan(params, function(err, data) { 
+if (err) 
+console.log(JSON.stringify(err, null, 2)); 
+else 
+console.log(JSON.stringify(data, null, 2)); 
+}); 
+
+
+
+UPDATE 
+
+
+var params = { 
+TableName: "PizzaDelivery", 
+Key: { 
+"ID": 5, 
+"Name":"Manali" 
+}, 
+UpdateExpression: "SET Order_date = :c", 
+ExpressionAttributeValues: { 
+":c": "10 june 2018"
+}, 
+ReturnValues: "ALL_NEW" 
+}; 
+docClient.update(params, function(err, data) {
+    if (err) ppJson(err); // an error occurred
+    else ppJson(data); // successful response
+});
+
+
+QUERY
+
+var params = { 
+TableName: "PizzaDelivery", 
+KeyConditionExpression: "ID = :n", 
+ExpressionAttributeValues: { 
+":n": 8
+} 
+}; 
+docClient.query(params, function(err, data) { 
+if (err) 
+console.log(JSON.stringify(err, null, 2)); 
+else 
+console.log(JSON.stringify(data, null, 2)); 
+}); 
+
+DELETE
+
+
+var params = { 
+TableName: "PizzaDelivery", 
+Key: { 
+"ID": 5, 
+"Name":"Manali" 
+}, 
+}; 
+docClient.delete(params, function(err, data) { 
+if (err) 
+console.log(JSON.stringify(err, null, 2)); 
+else 
+console.log(JSON.stringify(data, null, 2)); 
+}); 
+
+
+
+
+INDEXING
+
+
+
+
+var params = {
+
+TableName : "PizzaDelivery1",
+
+KeySchema: [
+
+{ AttributeName: "ID", KeyType: "HASH" }, //Partition key
+
+{ AttributeName: "Name", KeyType: "RANGE" }, //Sort key
+
+],
+GlobalSecondaryIndexes: [{
+            IndexName: 'Id-index',
+            KeySchema: [
+                {
+                    AttributeName: 'PId',
+                    KeyType: 'HASH'
+                }
+            ],
+            Projection: {
+                ProjectionType: 'ALL'
+            },   
+            ProvisionedThroughput: {
+                ReadCapacityUnits: 1,
+                WriteCapacityUnits: 1
+            }
+        }
+    ],
+    LocalSecondaryIndexes: [{
+            IndexName: 'Order_date-index',
+            KeySchema: [
+                {
+                    AttributeName: 'ID',
+                    KeyType: 'HASH'
+                },
+               {
+                    AttributeName: 'Order_date',
+                    KeyType: 'RANGE'
+                }
+            ],
+            Projection: {
+                ProjectionType: 'ALL'
+            }
+        }
+    ],
+AttributeDefinitions: [
+
+{ AttributeName: "ID", AttributeType: "N" },
+
+{ AttributeName: "Name", AttributeType: "S" },
+
+{ AttributeName: "Order_date", AttributeType: "S" },
+
+{ AttributeName: "PId", AttributeType: "N" }
+],
+
+ProvisionedThroughput: {
+
+ReadCapacityUnits: 1,
+
+WriteCapacityUnits: 1
+
+}
+
+};
+
+dynamodb.createTable(params, function(err, data) {
+    if (err)
+        console.log(JSON.stringify(err, null, 2));
+    else
+        console.log(JSON.stringify(data, null, 2));
+});
+
+
+
+
+CHANGE ORDER ASC/DESC
+
+
+var params = { 
+TableName: "PizzaDelivery1",
+ IndexName: 'Order_date-index',
+KeyConditionExpression: " ID = :i and Order_date = :n", 
+ExpressionAttributeValues: { 
+":n": '16 jan 2017',
+":i": 2
+} ,
+    Limit: 5,
+    ScanIndexForward: true
+}; 
+docClient.query(params, function(err, data) { 
+if (err) 
+console.log(JSON.stringify(err, null, 2)); 
+else 
+console.log(JSON.stringify(data, null, 2)); 
+}); 
+
+
+
+
+RANGE QUERY
+
+
+var params = { 
+TableName: "PizzaDelivery", 
+KeyConditionExpression: "ID = :i and #name between :n1 and :n2", 
+ExpressionAttributeNames: { 
+"#name": "Name",
+} ,
+ExpressionAttributeValues: { 
+":n1": "C",
+":n2": "D",
+":i":11
+} 
+}; 
+docClient.query(params, function(err, data) { 
+if (err) 
+console.log(JSON.stringify(err, null, 2)); 
+else 
+console.log(JSON.stringify(data, null, 2)); 
+}); 
+

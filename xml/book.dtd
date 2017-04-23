@@ -1,0 +1,24 @@
+<!-- DTD created at Thu Apr 21 09:47:04 IST 2016 with EditiX. Please insert an encoding attribute header for converting any DTD  -->
+
+<!ELEMENT  bib (book*)>
+
+<!ELEMENT  book (title,(author+ | editor+ ),publisher,price)>
+
+<!ATTLIST book year CDATA #REQUIRED>
+
+<!ELEMENT  author (last,first)>
+
+<!ELEMENT editor (last,first,affiliation)>
+
+<!ELEMENT title (#PCDATA)>
+
+<!ELEMENT last (#PCDATA)>
+
+<!ELEMENT first (#PCDATA)>
+
+<!ELEMENT affiliation (#PCDATA)>
+
+<!ELEMENT publisher (#PCDATA)>
+
+
+<!ELEMENT price (#PCDATA)>

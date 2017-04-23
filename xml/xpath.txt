@@ -1,0 +1,11 @@
+tokenize("Mango,Banana,Apple,WaterMelon,Orange",",")
+
+replace("12:30","30","45")
+
+let $y:="Mango,Banana,Apple,WaterMelon,Orange"
+for $x in tokenize($y,",")
+
+return
+<fruit>
+{$x}
+</fruit> 

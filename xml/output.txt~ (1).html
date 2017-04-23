@@ -1,0 +1,153 @@
+<Title>{/bib/book[price>300]/title}</Title>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Title>
+   <title>Computer Networks</title>
+   <title>Data Structure and Concepts</title>
+   <title>Java Tutorial</title>
+</Title>
+--------------------------------------------------------
+/bib/book
+<?xml version="1.0" encoding="UTF-8"?>
+<book year="1992">
+   <title>Computer Networks</title>
+   <author>
+      <last>Piterson</last>
+      <first>Biley</first>
+   </author>
+   <publisher>Tech MAx</publisher>
+   <price>450</price>
+</book>
+<book year="1993">
+   <title>Data Structure and Concepts</title>
+   <author>
+      <last>Herberlt</last>
+      <first>Shield</first>
+   </author>
+   <!--author>
+			<last>Nameley</last>
+			<first>Jack</first>
+		</author--><publisher>Orieley</publisher>
+   <price>690</price>
+</book>
+<book year="2000">
+   <title>Java Tutorial</title>
+   <author>
+      <last>Herberlt</last>
+      <first>Shield</first>
+   </author>
+   <author>
+      <last>Nameley</last>
+      <first>Jack</first>
+   </author>
+   <publisher>Orieley</publisher>
+   <price>690</price>
+</book>
+
+-------------------------------------------------------
+<Year>{/bib/book/@year/string()}</Year>
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Year>1992 1993 2000</Year>
+
+-------------------------------------------------------
+
+******** FLWOR ***********
+for $x in doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+let $b := $x/title
+return $b
+
+<?xml version="1.0" encoding="UTF-8"?>
+<title>Computer Networks</title>
+<title>Data Structure and Concepts</title>
+<title>Java Tutorial</title>
+----------------------------------------------
+To get title distinct
+let $x := doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+for $y in distinct-values($x/title)
+return <title>{$y}</title>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<title>Computer Networks</title>
+<title>Data Structure and Concepts</title>
+<title>Java Tutorial</title>
+-----------------------------------------------------
+
+To get mini price of book 
+let $x := doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+for $y in distinct-values($x/title)
+return 
+<Min>
+{
+   for $y1 in doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+   where $y1/title=$y
+   return min($y1/price)
+  }</Min>
+
+
+-----------------------------------------------------------
+
+to get title of year>1993
+for $x in doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+let $b := $x/@year
+where $b>1992
+return <res>{$b,$x/title}</res>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<res year="1993">
+   <title>Data Structure and Concepts</title>
+</res>
+<res year="2000">
+   <title>Java Tutorial</title>
+</res>
+<res year="2001">
+   <title>Java Tutorial</title>
+</res>
+-----------------------------------------------------
+To get title and author of book which has more than 1 author
+
+for $x in doc("/home/pict/Desktop/B120058553/book.xml")/bib/book
+let $b := count($x/author)
+where $b>1
+return <res>{$x/title,$x/author}</res>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<res>
+   <title>Java Tutorial</title>
+   <author>
+      <last>Herberlt</last>
+      <first>Shield</first>
+   </author>
+   <author>
+      <last>Nameley</last>
+      <first>Jack</first>
+   </author>
+</res>
+-------------------------------------------------------------------
+
+To get title,publisher,author 
+
+<?xml version="1.0" encoding="UTF-8"?>
+<res>
+   <title>Java Tutorial</title>
+   <author>
+      <last>Herberlt</last>
+      <first>Shield</first>
+   </author>
+   <author>
+      <last>Nameley</last>
+      <first>Jack</first>
+   </author>
+   <publisher>Orieley</publisher>
+</res>
+
+-------------------------------------------------------------------
+
+<?xml version="1.0" encoding="UTF-8"?>
+<publisher>Addison-weseley</publisher>
+<publisher>Addison-weseley</publisher>
+<publisher>Orieley</publisher>
+<publisher>Orieley</publisher>
+<publisher>Orieley</publisher>
+<publisher>Tech MAx</publisher>

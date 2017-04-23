@@ -1,0 +1,218 @@
+ubuntu@ubuntu-VirtualBox:~$ ~/cassandra/bin/cqlsh
+Connected to Test Cluster at 127.0.0.1:9042.
+[cqlsh 5.0.1 | Cassandra 2.2.5 | CQL spec 3.3.1 | Native protocol v4]
+Use HELP for help.
+cqlsh> create keyspace mykeysp with replication = {'class':'SimpleStrategy','replication_factor':1};
+cqlsh> use mykeysp;
+cqlsh:mykeysp> create table songs (id int PRIMARY KEY, title text, album text, artist text, data blob);
+cqlsh:mykeysp> create table playlists (id int, song_order int, song_id int, title text, album text, artist text, PRIMARY KEY (id, song_order)); 
+cqlsh:mykeysp> describe table songs;
+
+CREATE TABLE mykeysp.songs (
+    id int PRIMARY KEY,
+    album text,
+    artist text,
+    data blob,
+    title text
+) WITH bloom_filter_fp_chance = 0.01
+    AND caching = '{"keys":"ALL", "rows_per_partition":"NONE"}'
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy'}
+    AND compression = {'sstable_compression': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND dclocal_read_repair_chance = 0.1
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99.0PERCENTILE';
+
+cqlsh:mykeysp> describe table playlists ;
+
+CREATE TABLE mykeysp.playlists (
+    id int,
+    song_order int,
+    album text,
+    artist text,
+    song_id int,
+    title text,
+    PRIMARY KEY (id, song_order)
+) WITH CLUSTERING ORDER BY (song_order ASC)
+    AND bloom_filter_fp_chance = 0.01
+    AND caching = '{"keys":"ALL", "rows_per_partition":"NONE"}'
+    AND comment = ''
+    AND compaction = {'class': 'org.apache.cassandra.db.compaction.SizeTieredCompactionStrategy'}
+    AND compression = {'sstable_compression': 'org.apache.cassandra.io.compress.LZ4Compressor'}
+    AND dclocal_read_repair_chance = 0.1
+    AND default_time_to_live = 0
+    AND gc_grace_seconds = 864000
+    AND max_index_interval = 2048
+    AND memtable_flush_period_in_ms = 0
+    AND min_index_interval = 128
+    AND read_repair_chance = 0.0
+    AND speculative_retry = '99.0PERCENTILE';
+
+cqlsh:mykeysp> insert into playlists (id,song_order,song_id,title,artist,album) values (100,1,1001,'La Grange','Mike','Tres Hombres');
+cqlsh:mykeysp> insert into playlists (id,song_order,song_id,title,artist,album) values (100,2,1002,'Moving in','Swift','We must Obey');
+cqlsh:mykeysp> insert into playlists (id,song_order,song_id,title,artist,album) values (100,3,1003,'One day','Justin','Roll away');
+cqlsh:mykeysp> insert into playlists (id,song_order,song_id,title,artist,album) values (100,4,1004,'Ojo Rojo','Swift','No one');
+cqlsh:mykeysp> select * from playlists;
+
+ id  | song_order | album        | artist | song_id | title
+-----+------------+--------------+--------+---------+-----------
+ 100 |          1 | Tres Hombres |   Mike |    1001 | La Grange
+ 100 |          2 | We must Obey |  Swift |    1002 | Moving in
+ 100 |          3 |    Roll away | Justin |    1003 |   One day
+ 100 |          4 |       No one |  Swift |    1004 |  Ojo Rojo
+
+(4 rows)
+cqlsh:mykeysp> create index on playlists(artist);
+cqlsh:mykeysp> select album, title from playlists where artist = 'Swift';
+
+ album        | title
+--------------+-----------
+ We must Obey | Moving in
+       No one |  Ojo Rojo
+
+(2 rows)
+cqlsh:mykeysp> select * from playlists where id = 100 ORDER BY song_order DESC LIMIT 50;
+
+ id  | song_order | album        | artist | song_id | title
+-----+------------+--------------+--------+---------+-----------
+ 100 |          4 |       No one |  Swift |    1004 |  Ojo Rojo
+ 100 |          3 |    Roll away | Justin |    1003 |   One day
+ 100 |          2 | We must Obey |  Swift |    1002 | Moving in
+ 100 |          1 | Tres Hombres |   Mike |    1001 | La Grange
+
+(4 rows)
+cqlsh:mykeysp> alter table playlists ADD tags set<text>;
+cqlsh:mykeysp> update playlists SET tags = tags + {'2010'} WHERE id = 100 AND song_order = 2;
+cqlsh:mykeysp> select * from playlists;
+
+ id  | song_order | album        | artist | song_id | tags     | title
+-----+------------+--------------+--------+---------+----------+-----------
+ 100 |          1 | Tres Hombres |   Mike |    1001 |     null | La Grange
+ 100 |          2 | We must Obey |  Swift |    1002 | {'2010'} | Moving in
+ 100 |          3 |    Roll away | Justin |    1003 |     null |   One day
+ 100 |          4 |       No one |  Swift |    1004 |     null |  Ojo Rojo
+
+(4 rows)
+cqlsh:mykeysp> update playlists SET tags = tags + {'2007'} WHERE id = 100 AND song_order = 4;
+cqlsh:mykeysp> select * from playlists;
+
+ id  | song_order | album        | artist | song_id | tags     | title
+-----+------------+--------------+--------+---------+----------+-----------
+ 100 |          1 | Tres Hombres |   Mike |    1001 |     null | La Grange
+ 100 |          2 | We must Obey |  Swift |    1002 | {'2010'} | Moving in
+ 100 |          3 |    Roll away | Justin |    1003 |     null |   One day
+ 100 |          4 |       No one |  Swift |    1004 | {'2007'} |  Ojo Rojo
+
+(4 rows)
+cqlsh:mykeysp> update playlists SET tags = tags + {'classic'} WHERE id = 100 AND song_order = 2;
+cqlsh:mykeysp> select * from playlists;
+
+ id  | song_order | album        | artist | song_id | tags                | title
+-----+------------+--------------+--------+---------+---------------------+-----------
+ 100 |          1 | Tres Hombres |   Mike |    1001 |                null | La Grange
+ 100 |          2 | We must Obey |  Swift |    1002 | {'2010', 'classic'} | Moving in
+ 100 |          3 |    Roll away | Justin |    1003 |                null |   One day
+ 100 |          4 |       No one |  Swift |    1004 |            {'2007'} |  Ojo Rojo
+
+(4 rows)
+cqlsh:mykeysp> update playlists SET tags = tags + {'1973'} WHERE id = 100 AND song_order = 1;
+cqlsh:mykeysp> select * from playlists;
+
+ id  | song_order | album        | artist | song_id | tags                | title
+-----+------------+--------------+--------+---------+---------------------+-----------
+ 100 |          1 | Tres Hombres |   Mike |    1001 |            {'1973'} | La Grange
+ 100 |          2 | We must Obey |  Swift |    1002 | {'2010', 'classic'} | Moving in
+ 100 |          3 |    Roll away | Justin |    1003 |                null |   One day
+ 100 |          4 |       No one |  Swift |    1004 |            {'2007'} |  Ojo Rojo
+
+(4 rows)
+cqlsh:mykeysp> update playlists SET tags = tags + {'blues'} WHERE id = 100 AND song_order = 1;
+cqlsh:mykeysp> select * from playlists;
+
+ id  | song_order | album        | artist | song_id | tags                | title
+-----+------------+--------------+--------+---------+---------------------+-----------
+ 100 |          1 | Tres Hombres |   Mike |    1001 |   {'1973', 'blues'} | La Grange
+ 100 |          2 | We must Obey |  Swift |    1002 | {'2010', 'classic'} | Moving in
+ 100 |          3 |    Roll away | Justin |    1003 |                null |   One day
+ 100 |          4 |       No one |  Swift |    1004 |            {'2007'} |  Ojo Rojo
+
+(4 rows)
+cqlsh:mykeysp> update playlists SET tags = tags + {'rock'} WHERE id = 100 AND song_order = 4;
+cqlsh:mykeysp> select * from playlists;
+
+ id  | song_order | album        | artist | song_id | tags                | title
+-----+------------+--------------+--------+---------+---------------------+-----------
+ 100 |          1 | Tres Hombres |   Mike |    1001 |   {'1973', 'blues'} | La Grange
+ 100 |          2 | We must Obey |  Swift |    1002 | {'2010', 'classic'} | Moving in
+ 100 |          3 |    Roll away | Justin |    1003 |                null |   One day
+ 100 |          4 |       No one |  Swift |    1004 |    {'2007', 'rock'} |  Ojo Rojo
+
+(4 rows)
+cqlsh:mykeysp> alter table playlists ADD reviews list<text>;
+cqlsh:mykeysp> update playlists SET reviews = reviews + ['best lyrics'] WHERE id = 100 AND song_order = 4;
+cqlsh:mykeysp> select * from playlists;
+
+ id  | song_order | album        | artist | reviews         | song_id | tags                | title
+-----+------------+--------------+--------+-----------------+---------+---------------------+-----------
+ 100 |          1 | Tres Hombres |   Mike |            null |    1001 |   {'1973', 'blues'} | La Grange
+ 100 |          2 | We must Obey |  Swift |            null |    1002 | {'2010', 'classic'} | Moving in
+ 100 |          3 |    Roll away | Justin |            null |    1003 |                null |   One day
+ 100 |          4 |       No one |  Swift | ['best lyrics'] |    1004 |    {'2007', 'rock'} |  Ojo Rojo
+
+(4 rows)
+cqlsh:mykeysp> update playlists SET reviews = reviews + ['magical'] WHERE id = 100 AND song_order = 4;
+cqlsh:mykeysp> select * from playlists;
+
+ id  | song_order | album        | artist | reviews                    | song_id | tags                | title
+-----+------------+--------------+--------+----------------------------+---------+---------------------+-----------
+ 100 |          1 | Tres Hombres |   Mike |                       null |    1001 |   {'1973', 'blues'} | La Grange
+ 100 |          2 | We must Obey |  Swift |                       null |    1002 | {'2010', 'classic'} | Moving in
+ 100 |          3 |    Roll away | Justin |                       null |    1003 |                null |   One day
+ 100 |          4 |       No one |  Swift | ['best lyrics', 'magical'] |    1004 |    {'2007', 'rock'} |  Ojo Rojo
+
+(4 rows)
+cqlsh:mykeysp> alter table playlists ADD venue map<timestamp,text>;
+cqlsh:mykeysp> insert into playlists (id,song_order,venue) values (100,4,{'2016-9-22 22:00':'THe Fillmore','2016-10-1 21:00':'The Apple Barrel'});
+cqlsh:mykeysp> select * from playlists;
+ id  | song_order | album        | artist | reviews                    | song_id | tags                | title     | venue
+-----+------------+--------------+--------+----------------------------+---------+---------------------+-----------+----------------------------------------------------------------------------------------------
+ 100 |          1 | Tres Hombres |   Mike |                       null |    1001 |   {'1973', 'blues'} | La Grange |                                                                                         null
+ 100 |          2 | We must Obey |  Swift |                       null |    1002 | {'2010', 'classic'} | Moving in |                                                                                         null
+ 100 |          3 |    Roll away | Justin |                       null |    1003 |                null |   One day |                                                                                         null
+ 100 |          4 |       No one |  Swift | ['best lyrics', 'magical'] |    1004 |    {'2007', 'rock'} |  Ojo Rojo | {'2016-09-22 16:30:00+0000': 'THe Fillmore', '2016-10-01 15:30:00+0000': 'The Apple Barrel'}
+
+(4 rows)
+cqlsh:mykeysp> create index on playlists (tags);
+cqlsh:mykeysp> create index mymapindex On playlists (venue);
+cqlsh:mykeysp> select album, tags from playlists;
+
+ album        | tags
+--------------+---------------------
+ Tres Hombres |   {'1973', 'blues'}
+ We must Obey | {'2010', 'classic'}
+    Roll away |                null
+       No one |    {'2007', 'rock'}
+
+(4 rows)
+cqlsh:mykeysp> select album, tags from playlists where tags CONTAINS 'blues';
+
+ album        | tags
+--------------+-------------------
+ Tres Hombres | {'1973', 'blues'}
+
+(1 rows)
+
+cqlsh:mykeysp> select artist, venue from playlists where venue CONTAINS 'THe Fillmore';
+
+ artist | venue
+--------+----------------------------------------------------------------------------------------------
+  Swift | {'2016-09-22 16:30:00+0000': 'THe Fillmore', '2016-10-01 15:30:00+0000': 'The Apple Barrel'}
+
+(1 rows)
+
+

@@ -1,0 +1,441 @@
+q1**************************************************
+
+/Employee//Emp[Children/Birthday/Month='Oct']/Ename
+-------------------------------------------------------
+for $x in /Employee/Emp
+where $x/Children/Birthday/Month='Oct'
+return $x/Ename
+
+
+------------------------------------------------
+
+for $x in /Employee/Emp
+where $x/Children/Birthday/Month='Oct'
+return 
+
+<Data>
+<Emp>
+<Ename>
+{$x/Ename}
+</Ename>
+<Children>
+{ $x/Children/Cname}
+</Children>
+</Emp>
+</Data>
+
+
+///////////////////////////////////////////////////////////////////output
+<?xml version="1.0" encoding="UTF-8"?>
+<Data>
+   <Emp>
+      <Ename>
+         <Ename>Smith Allen</Ename>
+      </Ename>
+      <Children>
+         <Cname>Barry Allen</Cname>
+         <Cname>salena Allen</Cname>
+      </Children>
+   </Emp>
+</Data>
+<Data>
+   <Emp>
+      <Ename>
+         <Ename>Cataline Ramon</Ename>
+      </Ename>
+      <Children>
+         <Cname>Alex Ramon</Cname>
+         <Cname>Amelly Ramon</Cname>
+      </Children>
+   </Emp>
+</Data>
+
+
+
+
+
+
+
+q2*************************************************
+
+
+/Employee//Emp[(Skills/Type='Doctor') and (Skills/Exam/City='Start City')]/Ename
+---------------------------------------------------------------
+for $x in /Employee/Emp
+where ($x/Skills/Type='Doctor') and ($x/Skills/Exam/City='Start City')
+return $x/Ename
+
+
+for $x in /Employee/Emp
+where ($x/Skills/Type='Doctor') and ($x/Skills/Exam/City='Start City')
+return 
+
+<Data>
+<Emp>
+<Ename>
+{$x/Ename}
+</Ename>
+<Skill>
+{ $x/Skills/Type}
+</Skill>
+<City>
+{$x/Skills/Exam/City}
+</City>
+</Emp>
+</Data>
+
+///////////////////////////////////////////////////////////////////////////////////op
+<?xml version="1.0" encoding="UTF-8"?>
+<Data>
+   <Emp>
+      <Ename>
+         <Ename>Smith Allen</Ename>
+      </Ename>
+      <Skill>
+         <Type>Doctor</Type>
+      </Skill>
+      <City>
+         <City>Start City</City>
+      </City>
+   </Emp>
+</Data>
+<Data>
+   <Emp>
+      <Ename>
+         <Ename>Cataline Ramon</Ename>
+      </Ename>
+      <Skill>
+         <Type>Doctor</Type>
+      </Skill>
+      <City>
+         <City>Start City</City>
+      </City>
+   </Emp>
+</Data>
+
+
+q3*************************************************
+
+distinct-values(//Type)
+------------------------------------------------------------
+for $x in /Employee/Emp
+where distinct-values($x/Skills//Type)
+return $x/Skills/Type
+
+
+for $x in /Employee/Emp
+where distinct-values($x/Skills//Type)
+return 
+
+<Data>
+<Skills>
+{
+ $x/Skills/Type}
+</Skills>
+</Data>
+///////////////////////////////////////////////////////
+<?xml version="1.0" encoding="UTF-8"?>
+<Data>
+   <Skills>
+      <Type>Doctor</Type>
+   </Skills>
+</Data>
+<Data>
+   <Skills>
+      <Type>Science</Type>
+   </Skills>
+</Data>
+<Data>
+   <Skills>
+      <Type>MBA</Type>
+   </Skills>
+</Data>
+<Data>
+   <Skills>
+      <Type>Computers</Type>
+   </Skills>
+</Data>
+<Data>
+   <Skills>
+      <Type>Doctor</Type>
+   </Skills>
+</Data>
+
+
+q4*************************************************
+
+/Employee//Emp[count(Children)=2]/Ename
+----------------------------------------------------------
+for $x in /Employee/Emp
+where count($x/Children)>=2
+return $x/Ename
+
+for $x in /Employee/Emp
+where count($x/Children)=2
+return 
+
+<Data>
+<Ename>
+{
+ $x/Ename}
+</Ename>
+</Data>
+///////////////////////////////////////////////////
+<?xml version="1.0" encoding="UTF-8"?>
+<Data>
+   <Skills>
+      <Type>Doctor</Type>
+   </Skills>
+</Data>
+<Data>
+   <Skills>
+      <Type>Science</Type>
+   </Skills>
+</Data>
+<Data>
+   <Skills>
+      <Type>MBA</Type>
+   </Skills>
+</Data>
+<Data>
+   <Skills>
+      <Type>Computers</Type>
+   </Skills>
+</Data>
+<Data>
+   <Skills>
+      <Type>Doctor</Type>
+   </Skills>
+</Data>
+
+q5*************************************************
+
+/Employee/Emp/Ename  | /Employee/Emp/Skills
+-------------------------------------------------
+for $x in /Employee/Emp
+where $x/Ename | $x/Skills/Type
+return
+ <h>
+<res>
+{$x/Ename }
+</res>
+<res>
+{$x/Skills/Type }
+</res>
+</h>
+
+/////////////////////////////////////////////////////////
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<h>
+   <res>
+      <Ename>Smith Allen</Ename>
+   </res>
+   <res>
+      <Type>Doctor</Type>
+   </res>
+</h>
+<h>
+   <res>
+      <Ename>Harrison Wells</Ename>
+   </res>
+   <res>
+      <Type>Science</Type>
+   </res>
+</h>
+<h>
+   <res>
+      <Ename>Oliver Queen</Ename>
+   </res>
+   <res>
+      <Type>MBA</Type>
+   </res>
+</h>
+<h>
+   <res>
+      <Ename>Felicity Smoak</Ename>
+   </res>
+   <res>
+      <Type>Computers</Type>
+   </res>
+</h>
+<h>
+   <res>
+      <Ename>Cataline Ramon</Ename>
+   </res>
+   <res>
+      <Type>Doctor</Type>
+   </res>
+</h>
+q6*************************************************//max Salary
+
+max(//Salary)
+----------------------------------------------------
+
+let $y:=max(//Salary)
+
+for $x in /Employee/Emp
+where $x/Salary = $y
+return 
+
+<Data>
+<Ename>
+{
+ $x/Ename}
+</Ename>
+</Data>
+/////////////////////////////////////////////////////////
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Data>
+   <Ename>
+      <Ename>Cataline Ramon</Ename>
+   </Ename>
+   <salary>
+      <Salary>55000</Salary>
+   </salary>
+</Data>
+q7**************************************************//Avg Salary
+
+avg(//Salary)
+-------------------------------------------------------------
+let $y:=avg(//Salary)
+
+return 
+
+<Data>
+<Avg>
+{
+ $y}
+</Avg>
+</Data>
+
+////////////////////////////////////////////////////////////////
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Data>
+   <Avg>43000</Avg>
+</Data>
+q8**************************************************//Min Salary
+
+min(//Salary)
+---------------------------------------------------------------
+let $y:=min(//Salary)
+
+for $x in /Employee/Emp
+where $x/Salary = $y
+return 
+
+<Data>
+<Ename>
+{
+ $x/Ename}
+</Ename>
+</Data>
+
+////////////////////////////////////////////////////////////////
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Data>
+   <Ename>
+      <Ename>Smith Allen</Ename>
+   </Ename>
+   <Ename>
+      <Salary>30000</Salary>
+   </Ename>
+</Data>
+
+q9**************************************************//Sum Salary
+
+sum(//Salary)
+------------------------------------------------------------
+let $y:=sum(//Salary)
+
+return 
+
+<Data>
+<Sum>
+{
+ $y}
+</Sum>
+</Data>
+///////////////////////////////////////////////////////////
+
+<?xml version="1.0" encoding="UTF-8"?>
+<Data>
+   <Sum>215000</Sum>
+</Data>
+
+q10**************************************************//contains
+
+
+--------------------------------------------------------------
+for $x in /Employee/Emp
+where contains($x/Ename,"C") 
+return
+ <h>
+<res>
+{$x/Ename }
+</res>
+<res>
+{$x/Skills/Type }
+</res>
+</h>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<h>
+   <res>
+      <Ename>Cataline Ramon</Ename>
+   </res>
+   <res>
+      <Type>Doctor</Type>
+   </res>
+</h>
+
+q11************************************************* starts-with
+
+/Employee/Emp[starts-with(Ename,"C")]/Ename
+-----------------------------------------------------------------
+for $x in /Employee/Emp
+where  starts-with($x/Ename,"C") 
+return
+ <h>
+<res>
+{$x/Ename }
+</res>
+<res>
+{$x/Skills/Type }
+</res>
+</h
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<h>
+   <res>
+      <Ename>Cataline Ramon</Ename>
+   </res>
+   <res>
+      <Type>Doctor</Type>
+   </res>
+</h>
+
+
+q12************************************************************ends-with
+
+/Employee/Emp[ends-with(Ename,"n")]/Ename
+------------------------------------------------------------------------
+for $x in /Employee/Emp
+where  ends-with($x/Ename,"n") 
+return
+ <h>
+<res>
+{$x/Ename }
+</res>
+<res>
+{$x/Skills/Type }
+</res>
+</h>

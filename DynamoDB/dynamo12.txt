@@ -1,0 +1,118 @@
+12.
+creating customer table with id and name only
+
+var params = {
+
+TableName : "Customer",
+
+KeySchema: [
+
+{ AttributeName: "ID", KeyType: "HASH" }, //Partition key
+
+{ AttributeName: "Name", KeyType: "RANGE" }, //Sort key
+
+],
+
+AttributeDefinitions: [
+
+{ AttributeName: "ID", AttributeType: "N" },
+
+{ AttributeName: "Name", AttributeType: "S" }
+],
+
+ProvisionedThroughput: {
+
+ReadCapacityUnits: 1,
+
+WriteCapacityUnits: 1
+
+}
+
+};
+
+dynamodb.createTable(params, function(err, data) {
+    if (err)
+        console.log(JSON.stringify(err, null, 2));
+    else
+        console.log(JSON.stringify(data, null, 2));
+});
+
+---------------------------------------------------------------
+inserting records:
+
+var params = {
+    TableName: "Customer",
+    Item: {
+        "ID":2,
+        "Name":"David",
+        "address":{
+            "street":"LA street",
+            "city":"pune",
+            "state":"Mah",
+            "zip":"411046"
+        }
+        
+    }
+};
+docClient.put(params, function(err, data) {
+    if (err)
+        console.log(JSON.stringify(err, null, 2));
+    else
+        console.log(JSON.stringify(data, null, 2));
+});
+
+---------------------------------------------------------------
+
+list all items inserted by user
+
+var params = { 
+TableName: "Customer" 
+}; 
+dynamodb.scan(params, function(err, data) { 
+if (err) 
+console.log(JSON.stringify(err, null, 2)); 
+else 
+console.log(JSON.stringify(data, null, 2)); 
+}); 
+
+----------------------------------------------------------------
+
+list based on condition on id
+
+var params = { 
+TableName: "Customer", 
+KeyConditionExpression: "ID = :n", 
+ExpressionAttributeValues: { 
+":n": 1
+} 
+}; 
+docClient.query(params, function(err, data) { 
+if (err) 
+console.log(JSON.stringify(err, null, 2)); 
+else 
+console.log(JSON.stringify(data, null, 2)); 
+}); 
+
+------------------------------------------------------------------
+
+get item 
+
+var params = {
+    TableName: 'Customer',
+    Key: { 
+    
+       ID: 1,
+       Name:"Amit"    
+    },
+    AttributesToGet: [ 
+        'ID','Name','address'
+    ],
+    ConsistentRead: false, 
+    ReturnConsumedCapacity: 'NONE', 
+};
+docClient.get(params, function(err, data) {
+    if (err) ppJson(err); // an error occurred
+    else ppJson(data); // successful response
+});
+
+--------------------------------------------------------------------

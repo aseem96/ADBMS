@@ -1,0 +1,10 @@
+<!-- DTD created at Wed Apr 20 11:33:46 IST 2016 with EditiX. Please insert an encoding attribute header for converting any DTD  -->
+
+<!ELEMENT  tag (#PCDATA)>
+<!ATTLIST tag  attribute CDATA #REQUIRED>
+
+<!ELEMENT  bib (book* ) >
+<!ELEMENT book (title,(author+ | editor+),publisher,price)>
+<!ATTLIST book year CDATA #REQUIRED>
+<!ELEMENT author (last,first)>
+<!ELEMENT editor (last,first,affiliation)>

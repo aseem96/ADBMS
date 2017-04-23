@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- New document created with EditiX at Thu Apr 21 09:33:42 IST 2016 -->
+
+
+<!DOCTYPE bib SYSTEM "/home/pict/Desktop/B120058553/book.dtd">
+<bib>
+	<book year="1992">
+		<title>Computer Networks</title>
+		<author>
+			<last>Piterson</last>
+			<first>Biley</first>
+		</author>
+		
+		<publisher>Tech MAx</publisher>
+		<price>450</price>
+	</book>
+	<book year="1993">
+		<title>Data Structure and Concepts</title>
+		<author>
+			<last>Herberlt</last>
+			<first>Shield</first>
+		</author>
+		<publisher>Orieley</publisher>
+		<price>690</price>
+	</book>
+	<book year="2000">
+		<title>Java Tutorial</title>
+		<author>
+			<last>Herberlt</last>
+			<first>Shield</first>
+		</author>
+		<author>
+			<last>Nameley</last>
+			<first>Jack</first>
+		</author>
+		<author>
+			<last>Herberlt</last>
+			<first>Shield</first>
+		</author>
+		<author>
+			<last>Nameley</last>
+			<first>Jack</first>
+		</author>
+		<publisher>Orieley</publisher>
+		<price>690</price>
+	</book>
+	<book year="2001">
+		<title>Java Tutorial</title>
+		<author>
+			<last>karl</last>
+			<first>Shield</first>
+		</author>		
+		<publisher>Orieley</publisher>
+		<price>500</price>
+	</book>
+	<book year="2001">
+		<title>Java head first search</title>
+		<author>
+			<last>karl</last>
+			<first>Shield</first>
+		</author>		
+		<publisher>Addison-weseley</publisher>
+		<price>500</price>
+	</book>
+	<book year="2001">
+		<title>cpp</title>
+		<author>
+			<last>karl</last>
+			<first>Shield</first>
+		</author>		
+		<publisher>Addison-weseley</publisher>
+		<price>590</price>
+	</book>
+</bib>

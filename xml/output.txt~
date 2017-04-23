@@ -1,0 +1,93 @@
+Query 1:
+List the books published by Addison-werley after 1991,including their year and title.
+
+FLWOR EXPRESSION:
+
+for $c in //book 
+where $c/publisher="Addison-wesley" and $c/@year>1991
+return data($c/@year |  $c/title) 
+
+OUTPUT:
+
+1999 "Ak's peotry in the way she wanted"
+
+========================================================================================================================
+
+Query 2:
+For each book in the biblography, list the a title and authors.
+
+FLWOR EXPRESSION:
+
+for $c in //book 
+return $c/title | $c/author  
+
+OUTPUT:
+
+<?xml version="1.0" encoding="UTF-8"?>
+<title>"FIVE POINTS SOMEONE"</title>
+<author>
+   <last>BHAGAT</last>
+   <first>CHETAN</first>
+</author>
+<title>"THE NOTEBOOK"</title>
+<author>
+   <last>STEVEN</last>
+   <first>WOLKS</first>
+</author>
+<title>"Ak's peotry in the way she wanted"</title>
+<author>
+   <last>G</last>
+   <first>Ankit</first>
+</author>
+
+==============================================================================================================================
+
+
+Query 3:
+List the author's name and title of the books of that author.
+
+for $c in /bib
+let $b:=distinct-values(//author)
+return for $d in $b
+return data(//book[author=$d]/(title | author))
+
+OUTPUT:
+
+"FIVE POINTS SOMEONE" 
+BHAGAT
+CHETAN
+ "ONE NIGHT AT CALL CENTRE" 
+BHAGAT
+CHETAN
+ "THE NOTEBOOK" 
+STEVEN
+WOLKS
+ "Ak's peotry in the way she wanted" 
+G
+Ankit
+===================================================================================================================================
+
+Query 4:
+
+For each book, list the title and the authors having atleast two authors enclosed it in the <result> tag.
+
+
+<result>{
+for $c in //book
+where count($c/author)>1
+return $c/title | $c/author}
+</result>
+
+OUTPUT:
+
+<result>
+   <title>"THE NOTEBOOK"</title>
+   <author>
+      <last>STEVEN</last>
+      <first>WOLKS</first>
+   </author>
+   <author>
+      <last>BHAGAT</last>
+      <first>CHETAN</first>
+   </author>
+</result>
