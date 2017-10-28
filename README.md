@@ -1,6 +1,6 @@
 # ADBMS
 
-This repository contains my solutions for all the programming assignments of BE-IT Advanced Databases Laboratory or SL-V.
+This repository contains my solutions for all the programming assignments of BE-IT Advanced Databases Laboratory or SL-V, BE-2012 course.
 The description of the assignments is given below.
 
 1.  Study and Configure Hadoop for Big Data
